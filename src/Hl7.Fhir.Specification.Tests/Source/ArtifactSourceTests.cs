@@ -3,7 +3,7 @@
  * See the file CONTRIBUTORS for details.
  * 
  * This file is licensed under the BSD 3-Clause license
- * available at https://raw.githubusercontent.com/FirelyTeam/fhir-net-api/master/LICENSE
+ * available at https://raw.githubusercontent.com/FirelyTeam/firely-net-sdk/master/LICENSE
  */
 
 using Hl7.Fhir.Model;
@@ -269,17 +269,21 @@ namespace Hl7.Fhir.Specification.Tests
             Assert.IsTrue(resourceIds.All(url => url.StartsWith("http://hl7.org/fhir/StructureDefinition/")));
             resourceIds.Remove("http://hl7.org/fhir/StructureDefinition/SimpleQuantity");
             resourceIds.Remove("http://hl7.org/fhir/StructureDefinition/MoneyQuantity");
-            resourceIds.Remove("http://hl7.org/fhir/StructureDefinition/xhtml");  // xhtml is not represented in the pocos
 
             // + total number of known FHIR core types
             // - total number of known (concrete) resources
             // - 1 for abstract type Resource
             // - 1 for abstract type DomainResource
+            // - 4 for abstract R5 base types not present as R4 structuredefs
             // =======================================
             //   total number of known FHIR (complex & primitive) datatypes
             var coreDataTypes = ModelInfo.FhirCsTypeToString.Where(kvp => !ModelInfo.IsKnownResource(kvp.Key)
                                                                             && kvp.Value != "Resource"
                                                                             && kvp.Value != "DomainResource"
+                                                                            && kvp.Value != "BackboneType"
+                                                                            && kvp.Value != "Base"
+                                                                            && kvp.Value != "DataType"
+                                                                            && kvp.Value != "PrimitiveType"
                                                                             )
                                                             .Select(kvp => kvp.Value);
             var numCoreDataTypes = coreDataTypes.Count();
@@ -295,7 +299,7 @@ namespace Hl7.Fhir.Specification.Tests
         }
 
         // [WMR 20170817] NEW
-        // https://github.com/FirelyTeam/fhir-net-api/issues/410
+        // https://github.com/FirelyTeam/firely-net-sdk/issues/410
         // DirectorySource should gracefully handle insufficient access permissions
         // i.e. silently ignore all inaccessible files & folders
 
@@ -424,7 +428,7 @@ namespace Hl7.Fhir.Specification.Tests
         }
 
         // LoadByName should handle duplicate filenames in (different subfolders of) the contentdirectory
-        // https://github.com/FirelyTeam/fhir-net-api/issues/875
+        // https://github.com/FirelyTeam/firely-net-sdk/issues/875
 
         [TestMethod]
         public void OpenDuplicateFileNames()

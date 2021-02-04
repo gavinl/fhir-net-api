@@ -3,7 +3,7 @@
  * See the file CONTRIBUTORS for details.
  * 
  * This file is licensed under the BSD 3-Clause license
- * available at https://raw.githubusercontent.com/FirelyTeam/fhir-net-api/master/LICENSE
+ * available at https://raw.githubusercontent.com/FirelyTeam/firely-net-sdk/master/LICENSE
  */
 
 using Hl7.Fhir.Model;
@@ -748,7 +748,10 @@ namespace Hl7.Fhir.Rest
 
         private (string path, IncludeModifier modifier)[] stringToIncludeTuple(string[] includes)
         {
-            return includes.Select(i => (i, IncludeModifier.None)).ToArray();
+            if(includes != null && includes.Any())
+                return includes.Select(i => (i, IncludeModifier.None)).ToArray();
+            else
+                return new (string path, IncludeModifier modifier)[] { };
         }
     }
         #endregion

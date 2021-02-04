@@ -3,7 +3,7 @@
  * See the file CONTRIBUTORS for details.
  * 
  * This file is licensed under the BSD 3-Clause license
- * available at https://raw.githubusercontent.com/FirelyTeam/fhir-net-api/master/LICENSE
+ * available at https://raw.githubusercontent.com/FirelyTeam/firely-net-sdk/master/LICENSE
  */
 
 using Hl7.Fhir.Model;
@@ -232,7 +232,7 @@ namespace Hl7.Fhir.Test.Rest
             CollectionAssert.AreEquivalent(q.Include.ToList(), q2.Include.ToList());
             CollectionAssert.AreEquivalent(q.Parameters.ToList(), q2.Parameters.ToList());
             CollectionAssert.AreEquivalent(q.Elements.ToList(), q2.Elements.ToList());
-        }
+        }        
 
         [TestMethod]
         public void ParseAndSerializeSortParams()
@@ -258,6 +258,13 @@ namespace Hl7.Fhir.Test.Rest
                 new[] { Tuple.Create("parameter", String.Empty) },
                 q.Parameters.ToList()
             );
+        }
+
+        [TestMethod]
+        public void AddConstructorSearchParams()
+        {
+            var q =  new SearchParams("_id", "123");
+            Assert.AreEqual(new Tuple<string, string>("_id", "123"), q.Parameters.FirstOrDefault()); 
         }
 
         [TestMethod]
@@ -382,6 +389,15 @@ namespace Hl7.Fhir.Test.Rest
             var formatException = AssertThrows<FormatException>(() => q.Add("_elements", String.Empty));
             Assert.AreEqual("Invalid _elements value: it cannot be empty", formatException.Message);
         }
+
+        [TestMethod]
+        public void FormatExceptionOnSingleDashSortParam()
+        {
+            var q = new SearchParams();
+            var formatException = AssertThrows<FormatException>(() => q.Add("_sort", "-"));
+            Assert.AreEqual("Invalid _sort: one of the values is just a single '-', an element name must be provided", formatException.Message);            
+        }
+
 
         private void FormatExceptionOnDuplicateOrEmptyParam(string paramName)
         {

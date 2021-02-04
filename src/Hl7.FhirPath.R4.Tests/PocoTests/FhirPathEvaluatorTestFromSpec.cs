@@ -3,7 +3,7 @@
  * See the file CONTRIBUTORS for details.
  * 
  * This file is licensed under the BSD 3-Clause license
- * available at https://raw.githubusercontent.com/ewoutkramer/fhir-net-api/master/LICENSE
+ * available at https://raw.githubusercontent.com/FirelyTeam/firely-net-sdk/master/LICENSE
  */
 
 using Hl7.Fhir.ElementModel;
@@ -130,11 +130,14 @@ namespace Hl7.FhirPath.R4.Tests
                 // these date tests are incorrect - reported on Zulip
                 "testDateNotEqualTimezoneOffsetBefore", "testDateNotEqualTimezoneOffsetAfter", "testDateNotEqualUTC",
 
-                // how come x !~ x?.
-                "testNotEquivalent19", 
+                // we don't support these FhirPath extensions for validation yet
+                 "testConformsTo1", "testConformsTo2",
 
                 // rounding pi to 3 decimals will not become 2
-                "testRound2"
+                "testRound2",
+
+                // Still under discussion on Zulip (but this will probably align with outs in the end)
+                "testTrueAndFoo"
             };
 
             foreach (var file in files)
@@ -156,7 +159,7 @@ namespace Hl7.FhirPath.R4.Tests
 
             foreach (var item in doc.Descendants("test"))
             {
-                string groupName = item.Parent.Attribute("name").Value;
+                string groupName = item.Parent.Attribute("name")?.Value ?? "(no group name)";
                 string name = item.Attribute("name")?.Value ?? "(no name)";
 
                 if (ignoreTestcases.Contains(name)) continue; // skip the ignore testcases

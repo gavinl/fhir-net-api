@@ -3,7 +3,7 @@
  * See the file CONTRIBUTORS for details.
  * 
  * This file is licensed under the BSD 3-Clause license
- * available at https://raw.githubusercontent.com/FirelyTeam/fhir-net-api/master/LICENSE
+ * available at https://raw.githubusercontent.com/FirelyTeam/firely-net-sdk/master/LICENSE
  */
 
 using Hl7.Fhir.Language;
@@ -50,10 +50,11 @@ namespace Hl7.Fhir.Specification.Navigation
                 case "extension":
                     var url = getSingleStringParameter(call);
                     return parentSet.Extension(url);
+                case "as": // 'as()' for backwards compatibility only
                 case "ofType":
                     var type = getSingleStringParameter(call);
                     if (!ModelInfo.IsCoreModelType(type))
-                        throw new DiscriminatorFormatException($"Type '{type}' passed to ofType() is not a known FHIR type.");
+                        throw new DiscriminatorFormatException($"Type '{type}' passed to {call.FunctionName}() is not a known FHIR type.");
                     return parentSet.OfType(type);
                 default:
                     throw new DiscriminatorFormatException($"Invocation of function '{call.FunctionName}' is not supported in discriminators.");
